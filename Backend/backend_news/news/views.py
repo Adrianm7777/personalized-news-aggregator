@@ -5,15 +5,18 @@ from .models import Article
 from .serializers import ArticleSerialzer
 from transformers import pipeline
 
+summarizer = pipeline("summarization")
+
 @api_view(['GET'])
 def article_list(request):
     articles = Article.objects.all()
-    serialzers = ArticleSerialzer(articles, many=True)
+    
     for article in articles:
-        article.content = summerize_text(article.content)
-    return Response(serialzers.data)
+        article.content = summarize_text(article.content)
+    
+    serializers = ArticleSerialzer(articles, many=True)
+    return Response(serializers.data)
 
-summerizer = pipeline("summarization")
-def summerize_text(text):
-    summary = summerizer(text,max_lenght=50, min_lenght=25, do_sample=False)
+def summarize_text(text):
+    summary = summarizer(text, max_length=50, min_length=25, do_sample=False)
     return summary[0]['summary_text']
