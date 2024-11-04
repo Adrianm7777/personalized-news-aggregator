@@ -18,5 +18,5 @@ def article_list(request):
     return Response(serializers.data)
 
 def summarize_text(text):
-    summary = summarizer(text, max_length=50, min_length=25, do_sample=False)
+    summary = summarizer(text, max_length=15, min_length=5, do_sample=False)
     return summary[0]['summary_text']
